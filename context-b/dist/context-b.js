@@ -45,9 +45,9 @@ setTimeout(function () {
                 case 0: return [4 /*yield*/, shared_objects_1.getSharedObject('coolObj')];
                 case 1:
                     remoteObject = _a.sent();
-                    console.log('remote object', remoteObject);
+                    console.log('CONTEXT B: Remote Object:', remoteObject);
                     remoteObject.fieldA().then(function (res) {
-                        console.log('remote obj prop', res);
+                        //console.log('CONTEXT B: Access fieldA result:', res);
                     });
                     return [2 /*return*/];
             }

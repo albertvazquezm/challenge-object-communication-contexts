@@ -14,30 +14,21 @@ var COMMAND;
 })(COMMAND || (COMMAND = {}));
 var shareObject = function (objectName, obj) {
     // stores information of the object and how to access the data
-    console.log('sharing object ', objectName);
     var client = mqtt_1.default.connect('mqtt://broker.emqx.io');
     client.on('connect', function (pack) {
         client.subscribe(objectName);
     });
     client.on('message', function (topic, message) {
         var messageObj = JSON.parse(message.toString());
-        console.log('A onmessage', messageObj);
         switch (messageObj.command) {
             case COMMAND.GET_SHAPE: return client.publish(objectName, JSON.stringify({ command: COMMAND.SET_SHAPE, payload: JSON.stringify(getObjShape(obj)) }));
-            case COMMAND.GET_PROP: return console.log('this is what you requested!!!', object_path_1.default.get(obj, messageObj.payload.accessor));
+            case COMMAND.GET_PROP: return console.log('FROM REMOTE OBJECT: THIS IS WHAT YOU REQUESTED: ', object_path_1.default.get(obj, messageObj.payload.accessor));
         }
     });
-    /*realObj = obj;
-    stubObj = Object.keys(obj).reduce((newObj: any, key) => {
-        const val = obj[key];
-        newObj[key] = getObjProp(key)
-        return newObj;
-    }, {});*/
 };
 exports.shareObject = shareObject;
 var getObjShape = function (obj, prefix) {
     return Object.keys(obj).reduce(function (acc, key) {
-        console.log("typeof", typeof obj[key]);
         if (typeof obj[key] === 'object') {
             acc[key] = getObjShape(obj[key], key);
         }
@@ -58,7 +49,6 @@ var getSharedObject = function (objectName) {
         });
         client.on('message', function (topic, message) {
             var messageObj = JSON.parse(message.toString());
-            console.log('ONMESSAGE', messageObj);
             switch (messageObj.command) {
                 case COMMAND.SET_SHAPE: return res(buildRemoteAccessorObject(JSON.parse(messageObj.payload), function (accessor) {
                     console.log('publish get prop', accessor);
@@ -68,11 +58,9 @@ var getSharedObject = function (objectName) {
             }
         });
     });
-    //return Promise.resolve(stubObj);
 };
 exports.getSharedObject = getSharedObject;
 var buildRemoteAccessorObject = function (objShape, dispatchCommand) {
-    console.log('shape', Object.keys(objShape));
     return Object.keys(objShape).reduce(function (acc, key) {
         acc[key] = function () { return dispatchCommand(objShape[key]); };
         return acc;
