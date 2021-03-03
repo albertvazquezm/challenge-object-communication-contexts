@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto
+    ports:
+      - 1883:1883
+    networks:
+      - abb-net
+  shared-objects:
+    working_dir: /usr/app/src
+    image: node:12-alpine
+    networks:
+      - abb-net
+    #ports:
+    #  - "4000:4000"
+    volumes:
+      - .:/usr/app/src
+    command: ["npm", "run", "--prefix", "shared-objects", "build"]
+  context-a:
+    working_dir: /usr/app/src
+    image: node:12-alpine
+    networks:
+      - abb-net
+    #ports:
+    #  - "4000:4000"
+    volumes:
+      - .:/usr/app/src
+    command: ["npm", "run", "--prefix", "context-a", "start"]
+    depends_on:
+      - "shared-objects"
+      - "mosquitto"
+  context-b:
+    working_dir: /usr/app/src
+    image: node:12-alpine
+    networks:
+      - abb-net
+    #ports:
+    #  - "4000:4000"
+    volumes:
+      - .:/usr/app/src
+    command: ["npm", "run", "--prefix", "context-b", "start"]
+    depends_on:
+      - "context-a"
+networks:
+  abb-net:
+    external: true

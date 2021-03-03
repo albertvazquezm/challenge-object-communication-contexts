@@ -1,0 +1,9 @@
+{
+  "name": "matterway-context-challenge",
+  "private": "true",
+  "workspaces": [
+    "context-a",
+    "context-b",
+    "shared-objects"
+  ]
+}

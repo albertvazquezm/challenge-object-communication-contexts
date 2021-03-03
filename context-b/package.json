@@ -1,0 +1,17 @@
+{
+  "name": "context-b",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node ./dist/context-b.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "4.2.2"
+  },
+  "dependencies": {
+    "shared-objects": "1.0.0"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "context-a",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node ./dist/context-a.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "shared-objects": "1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "4.2.2"
+  }
+}
